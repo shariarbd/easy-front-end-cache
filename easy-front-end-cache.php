@@ -2,7 +2,7 @@
 /*
 Plugin Name: Easy Front End Cache
 Description: Lightweight file-based caching for WordPress front-end pages with admin controls.
-Version: 1.1
+Version: 1.2
 Author: Shariar
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -18,6 +18,7 @@ function efc_register_settings() {
     register_setting('efc_settings_group', 'efc_reset_param');
     register_setting('efc_settings_group', 'efc_reset_all_param');
     register_setting('efc_settings_group', 'efc_redirect_url');
+    register_setting('efc_settings_group', 'efc_allow_public_reset'); // new option
 }
 add_action('admin_init', 'efc_register_settings');
 
@@ -57,8 +58,28 @@ function efc_redirect_entire_site() {
     if (is_admin() || is_user_logged_in()) return;
     $redirect_url = get_option('efc_redirect_url', '');
     if (!empty($redirect_url)) {
-        wp_redirect($redirect_url);
+        wp_redirect(esc_url_raw($redirect_url));
         exit;
     }
 }
 add_action('template_redirect', 'efc_redirect_entire_site', 0);
+
+// Protect cache directory
+function efc_protect_cache_dir() {
+    $cache_dir = WP_CONTENT_DIR . '/efc-cache/';
+    if (!is_dir($cache_dir)) {
+        wp_mkdir_p($cache_dir);
+    }
+
+    $htaccess_file = $cache_dir . '.htaccess';
+    if (!file_exists($htaccess_file)) {
+        $rules = "Options -Indexes\n<FilesMatch \"\\.html$\">\n    Require all denied\n</FilesMatch>\n";
+        file_put_contents($htaccess_file, $rules);
+    }
+
+    $index_file = $cache_dir . 'index.php';
+    if (!file_exists($index_file)) {
+        file_put_contents($index_file, "<?php // Silence is golden");
+    }
+}
+add_action('init', 'efc_protect_cache_dir');

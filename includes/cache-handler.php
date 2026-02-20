@@ -7,6 +7,7 @@ function efc_handle_cache() {
     $cache_time   = (int) get_option('efc_cache_time', 600);
     $reset_param  = get_option('efc_reset_param', 'reset');
     $reset_all    = get_option('efc_reset_all_param', 'reset_all');
+    $allow_public = get_option('efc_allow_public_reset', 0);
     $cache_dir    = WP_CONTENT_DIR . '/efc-cache/';
 
     if (!is_dir($cache_dir)) {
@@ -18,15 +19,19 @@ function efc_handle_cache() {
 
     // Reset all
     if (isset($_GET[$reset_all]) && $_GET[$reset_all] == 1) {
-        foreach (glob($cache_dir . '*.html') as $file) {
-            if (is_file($file)) unlink($file);
+        if ($allow_public || current_user_can('manage_options')) {
+            foreach (glob($cache_dir . '*.html') as $file) {
+                if (is_file($file)) unlink($file);
+            }
+            wp_die("✅ All cache cleared.");
         }
-        wp_die("✅ All cache cleared.");
     }
 
     // Reset single
     if (isset($_GET[$reset_param]) && $_GET[$reset_param] == 1) {
-        if (file_exists($cache_file)) unlink($cache_file);
+        if ($allow_public || current_user_can('manage_options')) {
+            if (file_exists($cache_file)) unlink($cache_file);
+        }
     }
 
     // Serve cache

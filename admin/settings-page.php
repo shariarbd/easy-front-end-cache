@@ -33,6 +33,17 @@
                     <p class="description">If set, all front-end requests will redirect to this URL. Leave empty to disable.</p>
                 </td>
             </tr>
+            <tr>
+                <th scope="row">Allow Public Reset via URL</th>
+                <td>
+                    <input type="checkbox" name="efc_allow_public_reset" value="1" <?php checked(1, get_option('efc_allow_public_reset', 0)); ?> />
+                    <p class="description">
+                        If enabled, anyone can clear cache using query parameters (e.g., <code>?reset=1</code>).
+                        If disabled, only logged-in admins can use reset parameters.
+                        Manual reset button in admin always works.
+                    </p>
+                </td>
+            </tr>
         </table>
 
         <?php submit_button(); ?>
@@ -53,10 +64,8 @@
         }
     }
     ?>
-
     <p><strong>Cache Folder Size:</strong> <?php echo size_format($size); ?></p>
     <p><strong>Total Cached Files:</strong> <?php echo intval($count); ?></p>
-
 
     <form method="post">
         <?php wp_nonce_field('efc_clear_cache_action', 'efc_clear_cache_nonce'); ?>
@@ -78,6 +87,7 @@
             <li><strong>Single Page Reset:</strong> Add <code>?reset=1</code> (or your custom param) to the page URL to clear its cache.</li>
             <li><strong>Global Reset:</strong> Add <code>?reset_all=1</code> (or your custom param) to any URL to clear all cached pages.</li>
             <li><strong>Manual Reset:</strong> Use the “Clear All Cache” button above.</li>
+            <li><strong>Security:</strong> Public reset can be disabled so only admins can trigger resets.</li>
         </ul>
 
         <h3>Redirect Option</h3>
@@ -90,4 +100,9 @@
         <h3>Tips</h3>
         <ul>
             <li>Ensure <code>/wp-content/efc-cache/</code> is writable by the server.</li>
-           
+            <li>Test caching while logged out (logged-in users bypass cache).</li>
+            <li>Check response headers for <code>X-Cache: HIT</code> to confirm cache serving.</li>
+            <li>Cache folder is protected with <code>.htaccess</code> and <code>index.php</code> to block direct access.</li>
+        </ul>
+    </div>
+</div>
