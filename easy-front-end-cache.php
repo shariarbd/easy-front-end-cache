@@ -2,7 +2,7 @@
 /*
 Plugin Name: Easy Front End Cache
 Description: Lightweight file-based caching for WordPress front-end pages with admin controls.
-Version: 1.2
+Version: 1.3
 Author: Shariar
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -10,23 +10,24 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 if (!defined('ABSPATH')) exit;
 
+// Include caching logic
 require_once plugin_dir_path(__FILE__) . 'includes/cache-handler.php';
 
-// Register settings
+// Register plugin settings
 function efc_register_settings() {
     register_setting('efc_settings_group', 'efc_cache_time');
     register_setting('efc_settings_group', 'efc_reset_param');
     register_setting('efc_settings_group', 'efc_reset_all_param');
     register_setting('efc_settings_group', 'efc_redirect_url');
-    register_setting('efc_settings_group', 'efc_allow_public_reset'); // new option
+    register_setting('efc_settings_group', 'efc_allow_public_reset');
 }
 add_action('admin_init', 'efc_register_settings');
 
 // Add admin menu
 function efc_add_admin_menu() {
     add_options_page(
-        'Easy Front End Cache',
-        'Easy Front End Cache',
+        __('Easy Front End Cache', 'easy-front-end-cache'),
+        __('Easy Front End Cache', 'easy-front-end-cache'),
         'manage_options',
         'easy-front-end-cache',
         'efc_settings_page'
@@ -34,8 +35,11 @@ function efc_add_admin_menu() {
 }
 add_action('admin_menu', 'efc_add_admin_menu');
 
-// Load admin page
+// Load admin settings page
 function efc_settings_page() {
+    if (!current_user_can('manage_options')) {
+        return;
+    }
     include plugin_dir_path(__FILE__) . 'admin/settings-page.php';
 }
 
@@ -47,7 +51,7 @@ function efc_admin_clear_cache() {
             if (is_file($file)) unlink($file);
         }
         add_action('admin_notices', function() {
-            echo '<div class="notice notice-success is-dismissible"><p>✅ All cache cleared.</p></div>';
+            echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('✅ All cache cleared.', 'easy-front-end-cache') . '</p></div>';
         });
     }
 }
@@ -83,3 +87,12 @@ function efc_protect_cache_dir() {
     }
 }
 add_action('init', 'efc_protect_cache_dir');
+
+function efc_admin_assets($hook) {
+    if ($hook !== 'settings_page_easy-front-end-cache') {
+        return;
+    }
+    wp_enqueue_style('efc-admin-css', plugin_dir_url(__FILE__) . 'assets/css/admin.css', [], '1.0');
+    wp_enqueue_script('efc-admin-js', plugin_dir_url(__FILE__) . 'assets/js/admin.js', [], '1.0', true);
+}
+add_action('admin_enqueue_scripts', 'efc_admin_assets');
