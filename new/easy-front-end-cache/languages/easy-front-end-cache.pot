@@ -1,0 +1,205 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Easy Front End Cache 1.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-21 18:38+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Easy Front End Cache\n"
+
+#: easy-front-end-cache.php:34
+msgid "✅ All cache cleared."
+msgstr ""
+
+#: easy-front-end-cache.php:42
+msgid "Easy Front End Cache"
+msgstr ""
+
+#: admin/settings-page.php:5
+msgid "Easy Front End Cache Settings"
+msgstr ""
+
+#: admin/settings-page.php:13
+msgid "Cache Time (seconds)"
+msgstr ""
+
+#: admin/settings-page.php:16
+msgid "How long each cached page should remain valid before being regenerated."
+msgstr ""
+
+#: admin/settings-page.php:17
+msgid "Note: Admin pages, logged-in users, previews, search results, reset URLs, and query-string requests are never cached."
+msgstr ""
+
+#: admin/settings-page.php:23
+msgid "Reset Single Param"
+msgstr ""
+
+#: admin/settings-page.php:26
+msgid "Query parameter to clear cache for the current page. Example:"
+msgstr ""
+
+#: admin/settings-page.php:27
+msgid "Note: Requests with this parameter are excluded from caching automatically."
+msgstr ""
+
+#: admin/settings-page.php:33
+msgid "Reset All Param"
+msgstr ""
+
+#: admin/settings-page.php:36
+msgid "Query parameter to clear all cached pages. Example:"
+msgstr ""
+
+#: admin/settings-page.php:37
+msgid "Note: Requests with this parameter are excluded from caching automatically."
+msgstr ""
+
+#: admin/settings-page.php:43
+msgid "Redirect Entire Site"
+msgstr ""
+
+#: admin/settings-page.php:46
+msgid "If set, all front-end requests will redirect to this URL. Leave empty to disable."
+msgstr ""
+
+#: admin/settings-page.php:52
+msgid "Allow Public Reset via URL"
+msgstr ""
+
+#: admin/settings-page.php:55
+msgid "If enabled, anyone can clear cache using query parameters (e.g., ?reset=1)."
+msgstr ""
+
+#: admin/settings-page.php:56
+msgid "If disabled, only logged-in admins can use reset parameters."
+msgstr ""
+
+#: admin/settings-page.php:57
+msgid "Manual reset button in admin always works."
+msgstr ""
+
+#: admin/settings-page.php:65
+msgid "Cache Management"
+msgstr ""
+
+#: admin/settings-page.php:77
+msgid "Cache Folder Size:"
+msgstr ""
+
+#: admin/settings-page.php:78
+msgid "Total Cached Files:"
+msgstr ""
+
+#: admin/settings-page.php:83
+msgid "Clear All Cache"
+msgstr ""
+
+#: admin/settings-page.php:87
+msgid "Documentation"
+msgstr ""
+
+#: admin/settings-page.php:90
+msgid "How It Works"
+msgstr ""
+
+#: admin/settings-page.php:92
+msgid "Front-end pages are cached into /wp-content/efc-cache/ as static HTML files."
+msgstr ""
+
+#: admin/settings-page.php:93
+msgid "On first visit, the page is generated normally and saved to cache."
+msgstr ""
+
+#: admin/settings-page.php:94
+msgid "On subsequent visits, if the cache is still valid, the cached file is served instantly."
+msgstr ""
+
+#: admin/settings-page.php:95
+msgid "Logged-in users and admin pages are never cached."
+msgstr ""
+
+#: admin/settings-page.php:96
+msgid "Default Exclusions:"
+msgstr ""
+
+#: admin/settings-page.php:96
+msgid "Preview pages, WordPress search results, reset URLs (e.g., ?reset=1), and any request with query parameters are never cached."
+msgstr ""
+
+#: admin/settings-page.php:100
+msgid "Cache Reset Options"
+msgstr ""
+
+#: admin/settings-page.php:102
+msgid "Single Page Reset:"
+msgstr ""
+
+#: admin/settings-page.php:103
+msgid "Add ?reset=1 (or your custom param) to the page URL to clear its cache."
+msgstr ""
+
+#: admin/settings-page.php:104
+msgid "Global Reset:"
+msgstr ""
+
+#: admin/settings-page.php:105
+msgid "Add ?reset_all=1 (or your custom param) to any URL to clear all cached pages."
+msgstr ""
+
+#: admin/settings-page.php:106
+msgid "Manual Reset:"
+msgstr ""
+
+#: admin/settings-page.php:107
+msgid "Use the “Clear All Cache” button above."
+msgstr ""
+
+#: admin/settings-page.php:108
+msgid "Security:"
+msgstr ""
+
+#: admin/settings-page.php:109
+msgid "Public reset can be disabled so only admins can trigger resets."
+msgstr ""
+
+#: admin/settings-page.php:113
+msgid "Redirect Option"
+msgstr ""
+
+#: admin/settings-page.php:115
+msgid "If you set a redirect URL, all front-end requests will be redirected there."
+msgstr ""
+
+#: admin/settings-page.php:116
+msgid "Useful for maintenance mode or site migration."
+msgstr ""
+
+#: admin/settings-page.php:117
+msgid "Leave the field empty to disable redirection."
+msgstr ""
+
+#: admin/settings-page.php:121
+msgid "Tips"
+msgstr ""
+
+#: admin/settings-page.php:123
+msgid "Ensure /wp-content/efc-cache/ is writable by the server."
+msgstr ""
+
+#: admin/settings-page.php:124
+msgid "Test caching while logged out (logged-in users bypass cache)."
+msgstr ""
+
+#: admin/settings-page.php:125
+msgid "Check response headers for X-Cache: HIT to confirm cache serving."
+msgstr ""
+
+#: admin/settings-page.php:126
+msgid "Cache folder is protected with .htaccess and index.php to block direct access."
+msgstr ""
