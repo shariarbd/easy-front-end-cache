@@ -2,7 +2,7 @@
 /*
 Plugin Name: Easy Front End Cache
 Description: Lightweight file-based caching for WordPress front-end pages with admin controls.
-Version: 1.4
+Version: 1.3
 Author: Shariar
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -96,103 +96,3 @@ function efc_admin_assets($hook) {
     wp_enqueue_script('efc-admin-js', plugin_dir_url(__FILE__) . 'assets/js/admin.js', [], '1.0', true);
 }
 add_action('admin_enqueue_scripts', 'efc_admin_assets');
-
-
-
-
-
-// Add colorful Easy Cache status to admin bar
-function efc_admin_bar_status($wp_admin_bar) {
-    if (!current_user_can('manage_options')) {
-        return; // Only show for admins
-    }
-
-    $cache_dir = WP_CONTENT_DIR . '/efc-cache/';
-    $size = 0;
-    $count = 0;
-
-    if (is_dir($cache_dir)) {
-        $files = glob($cache_dir . '*.html');
-        if ($files) {
-            foreach ($files as $file) {
-                $size += filesize($file);
-            }
-            $count = count($files);
-        }
-    }
-
-    // Main colorful node
-    $wp_admin_bar->add_node([
-        'id'    => 'efc-status',
-        'title' => '<span style="color:#2ecc71;font-weight:bold;">⚡ Easy Cache</span>',
-        'href'  => admin_url('options-general.php?page=easy-front-end-cache'),
-    ]);
-
-    // Sub-node: Title
-    $wp_admin_bar->add_node([
-        'id'     => 'efc-title',
-        'parent' => 'efc-status',
-        'title'  => __('Easy Front End Cache', 'easy-front-end-cache'),
-        'href'   => admin_url('options-general.php?page=easy-front-end-cache'),
-    ]);
-
-    // Sub-node: Size
-    $wp_admin_bar->add_node([
-        'id'     => 'efc-size',
-        'parent' => 'efc-status',
-        'title'  => __('Size: ', 'easy-front-end-cache') . size_format($size),
-    ]);
-
-    // Sub-node: Files
-    $wp_admin_bar->add_node([
-        'id'     => 'efc-files',
-        'parent' => 'efc-status',
-        'title'  => __('Files: ', 'easy-front-end-cache') . intval($count),
-    ]);
-
-    // Sub-node: Clean All (instant action)
-    $wp_admin_bar->add_node([
-        'id'     => 'efc-clear',
-        'parent' => 'efc-status',
-        'title'  => __('🧹 Clean All', 'easy-front-end-cache'),
-        'href'   => wp_nonce_url(
-            admin_url('admin-post.php?action=efc_clear_cache_bar'),
-            'efc_clear_cache_action',
-            'efc_clear_cache_nonce'
-        ),
-    ]);
-
-    // Sub-node: Go to settings
-    $wp_admin_bar->add_node([
-        'id'     => 'efc-settings',
-        'parent' => 'efc-status',
-        'title'  => __('⚙️ Go Settings', 'easy-front-end-cache'),
-        'href'   => admin_url('options-general.php?page=easy-front-end-cache'),
-    ]);
-}
-add_action('admin_bar_menu', 'efc_admin_bar_status', 100);
-
-// Handle "Clean All" from admin bar
-function efc_handle_admin_bar_clear() {
-    if (!current_user_can('manage_options')) {
-        wp_die(__('Permission denied.', 'easy-front-end-cache'));
-    }
-
-    check_admin_referer('efc_clear_cache_action', 'efc_clear_cache_nonce');
-
-    $cache_dir = WP_CONTENT_DIR . '/efc-cache/';
-    foreach (glob($cache_dir . '*.html') as $file) {
-        if (is_file($file)) {
-            unlink($file);
-        }
-    }
-
-    // Success notice
-    add_action('admin_notices', function() {
-        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('✅ Cache cleared successfully.', 'easy-front-end-cache') . '</p></div>';
-    });
-
-    wp_safe_redirect(wp_get_referer() ?: admin_url());
-    exit;
-}
-add_action('admin_post_efc_clear_cache_bar', 'efc_handle_admin_bar_clear');

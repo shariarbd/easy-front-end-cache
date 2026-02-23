@@ -1,0 +1,61 @@
+/* Easy Front End Cache - Admin Styles */
+
+.wrap h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.form-table th {
+    width: 220px;
+    vertical-align: top;
+    padding-top: 12px;
+}
+
+.form-table td input[type="number"],
+.form-table td input[type="text"],
+.form-table td input[type="url"] {
+    width: 300px;
+    max-width: 100%;
+}
+
+.form-table td .description {
+    color: #666;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.form-table td .description em {
+    color: #444;
+    font-style: normal;
+    font-weight: 500;
+}
+
+.notice-success p {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/* Documentation box styling */
+.wrap .efc-doc-box {
+    background: #fff;
+    border: 1px solid #ccd0d4;
+    padding: 15px;
+    margin-top: 20px;
+}
+
+.wrap .efc-doc-box h3 {
+    margin-top: 0;
+    font-size: 18px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 6px;
+}
+
+.wrap .efc-doc-box ul {
+    list-style: disc;
+    margin-left: 20px;
+}
+
+.wrap .efc-doc-box li {
+    margin-bottom: 6px;
+}
