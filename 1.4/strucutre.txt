@@ -1,0 +1,24 @@
+easy-front-end-cache/
+├── easy-front-end-cache.php        # Main plugin bootstrap file
+│
+├── includes/
+│   └── cache-handler.php           # Core caching logic (front-end caching, exclusions, resets)
+│
+├── admin/
+│   └── settings-page.php           # Admin settings UI and documentation
+│
+├── assets/
+│   ├── css/
+│   │   └── admin.css               # (Optional) styles for settings page
+│   └── js/
+│       └── admin.js                # (Optional) scripts for admin interactions
+│
+├── languages/
+│   └── easy-front-end-cache.pot    # Translation template for i18n
+│
+├── screenshots/
+│   ├── screenshot-1.png            # Settings page screenshot
+│   ├── screenshot-2.png            # Cache management section
+│   └── screenshot-3.png            # Admin notice after clearing cache
+│
+└── README.md 
