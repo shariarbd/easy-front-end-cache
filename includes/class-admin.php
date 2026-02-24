@@ -180,7 +180,15 @@ class EFEC_Admin {
 
         $wp_admin_bar->add_node([
             'id'    => 'efc-status',
-            'title' => '⚡ Easy Cache',
+            'title' => '<span style="color:#2ecc71;font-weight:bold;">⚡ Easy Cache</span>',
+            'href'  => admin_url('options-general.php?page=easy-front-end-cache'),
+        ]);
+
+        // Sub-node: Title
+        $wp_admin_bar->add_node([
+            'id'     => 'efc-title',
+            'parent' => 'efc-status',
+            'title'  => __('<span style="font-size:.85em;">Easy Front End Cache</span>', 'easy-front-end-cache'), 
         ]);
 
         $wp_admin_bar->add_node([
@@ -242,6 +250,9 @@ class EFEC_Admin {
      * Render settings page
      */
     public static function render_settings_page() {
+        $dir   = WP_CONTENT_DIR . '/efc-cache/';
+        $size  = EFEC_Helpers::dir_size($dir);
+        $count = EFEC_Helpers::dir_count($dir);
         ?>
         <div class="wrap">
             <h1><?php esc_html_e('Easy Front End Cache', 'easy-front-end-cache'); ?></h1>
@@ -254,7 +265,13 @@ class EFEC_Admin {
             </form>
 
             <h2><?php esc_html_e('Cache Status', 'easy-front-end-cache'); ?></h2>
-            <p><?php esc_html_e('Directory:', 'easy-front-end-cache'); ?> <?php echo esc_html(WP_CONTENT_DIR . '/efc-cache/'); ?></p>
+            <p><?php esc_html_e('Directory:', 'easy-front-end-cache'); ?> 
+                <?php echo esc_html(WP_CONTENT_DIR . '/efc-cache/'); ?><br><br>
+                <span id="easy-front-end-cache_stattus">
+                    <strong style="color: rgb(0, 115, 170);">Cache Folder Size :</strong>  <?php echo size_format($size); ?> <br> 
+                    <strong style="color: rgb(0, 115, 170);">Total Cached Files:</strong>  <?php echo intval($count); ?>
+                </span>
+                </p>
             <p><?php esc_html_e('Next Scheduled Cleanup:', 'easy-front-end-cache'); ?> <?php echo esc_html(EFEC_Helpers::next_cron_time('efec_scheduled_cleanup_event')); ?></p>
             <button class="button efc-clear-cache-btn"><?php esc_html_e('🧹 Clean All Cache Now', 'easy-front-end-cache'); ?></button>
             <span class="efc-clear-status"></span>
