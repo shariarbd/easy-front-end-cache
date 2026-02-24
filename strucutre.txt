@@ -1,24 +1,20 @@
 easy-front-end-cache/
+│
 ├── easy-front-end-cache.php        # Main plugin bootstrap file
 │
 ├── includes/
-│   └── cache-handler.php           # Core caching logic (front-end caching, exclusions, resets)
-│
-├── admin/
-│   └── settings-page.php           # Admin settings UI and documentation
+│   ├── class-cache.php             # Core caching logic + secure cache dir creation
+│   ├── class-admin.php             # Settings page, admin bar, AJAX handlers
+│   ├── class-helpers.php           # Utility functions (safe unlink, cron helpers)
+│   ├── class-exclusions.php        # Exclusion rules (admin, logged-in, search, etc.)
+│   └── class-purge.php             # Purge triggers (post update/delete, theme switch, cron)
 │
 ├── assets/
-│   ├── css/
-│   │   └── admin.css               # (Optional) styles for settings page
-│   └── js/
-│       └── admin.js                # (Optional) scripts for admin interactions
+│   ├── css/admin.css               # Optional styling for settings page
+│   └── js/admin.js                 # AJAX logic for cache clearing (admin bar + settings)
 │
 ├── languages/
-│   └── easy-front-end-cache.pot    # Translation template for i18n
+│   └── easy-front-end-cache.pot    # Translation template
 │
-├── screenshots/
-│   ├── screenshot-1.png            # Settings page screenshot
-│   ├── screenshot-2.png            # Cache management section
-│   └── screenshot-3.png            # Admin notice after clearing cache
-│
-└── README.md 
+├── README.md                       # GitHub documentation
+└── readme.txt                      # WordPress.org distribution file

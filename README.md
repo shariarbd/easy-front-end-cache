@@ -1,19 +1,23 @@
 # Easy Front End Cache
 
-**Version:** 1.3  
+**Version:** 1.2.0 
 **Author:** Shariar  
 **License:** GPLv2 or later
 
 ## Description
 Easy Front End Cache is a lightweight file-based caching plugin for WordPress. It caches front-end pages into static HTML files for faster load times, with simple admin controls for cache management.
 
-## Features
-- File-based caching stored in `/wp-content/efc-cache/`
-- Manual cache clearing from admin
-- Automatic cache expiration (configurable)
-- Single-page and global reset via URL parameters
-- Site-wide redirect option (maintenance mode / migration)
-- Cache folder protection with `.htaccess` and `index.php`
+## ✨ Features
+- ⚡ Front‑end caching for faster page loads
+- 🧹 Manual cache clearing from both the admin bar and settings page (AJAX, no reload)
+- 🎨 Colorful admin bar status showing cache size and file count
+- 🔄 Automatic purge triggers (post update/delete, theme switch, scheduled cleanup)
+- 🛡️ Secure cache directory (`wp-content/efc-cache/`) with `.htaccess` and `index.php`
+- 🧩 Exclusions for admin, logged‑in users, search, previews, feeds, REST API, query strings, WooCommerce cart/checkout
+- 🛠️ Options for minify, debug mode, and admin controls
+- 🌍 Localization ready (`easy-front-end-cache.pot` included)
+
+---
 
 ## Default Exclusions
 The following are **never cached**:
@@ -42,6 +46,13 @@ The following are **never cached**:
 3. Admin notice after clearing cache
 
 ## Changelog
+**1.2.0**
+- Added AJAX cache clearing (admin bar + settings page)
+- Added cache status box with warnings
+- Added purge triggers (post update/delete, theme switch, scheduled cleanup)
+- Added minify + debug options
+- Secure cache directory with safety files
+
 ### 1.3
 - Added default exclusions: preview pages, search results, reset URLs, query-string requests
 - Improved admin UI with inline notes

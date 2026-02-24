@@ -1,29 +1,42 @@
-/**
- * Easy Front End Cache - Admin Scripts
- */
+jQuery(document).ready(function($) {
 
-document.addEventListener('DOMContentLoaded', function () {
-    // Highlight cache stats when page loads
-    const cacheStats = document.querySelectorAll('.wrap p strong');
-    cacheStats.forEach(stat => {
-        stat.style.color = '#0073aa'; // WordPress blue
-    });
+    // Admin bar clear
+    $(document).on('click', '.efc-clear-cache-link', function(e) {
+        e.preventDefault();
+        var $link = $(this);
+        $link.text('⏳ Clearing...');
 
-    // Add confirmation before clearing all cache
-    const clearCacheBtn = document.querySelector('input[name="efc_clear_cache"]');
-    if (clearCacheBtn) {
-        clearCacheBtn.addEventListener('click', function (e) {
-            if (!confirm('Are you sure you want to clear all cached files?')) {
-                e.preventDefault();
+        $.post(ajaxurl, { action: 'efc_clear_cache_ajax' }, function(response) {
+            if (response.success) {
+                $link.text('✅ Cleared');
+            } else {
+                $link.text('⚠️ Failed');
             }
+            setTimeout(function() { $link.text('🧹 Clean All'); }, 2000);
         });
-    }
-
-    // Toggle description emphasis for exclusions
-    const exclusionNotes = document.querySelectorAll('.form-table td .description em');
-    exclusionNotes.forEach(note => {
-        note.style.backgroundColor = '#f8f9fa';
-        note.style.padding = '2px 4px';
-        note.style.borderRadius = '3px';
     });
+
+    // Settings page clear
+    $(document).on('click', '.efc-clear-cache-btn', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $status = $('.efc-clear-status');
+        $btn.prop('disabled', true).text('⏳ Clearing...');
+        $status.removeClass('success error').addClass('loading').text('Clearing cache...');
+
+        $.post(ajaxurl, { action: 'efc_clear_cache_ajax' }, function(response) {
+            if (response.success) {
+                $btn.text('✅ Cleared');
+                $status.removeClass('loading').addClass('success').text(response.data.message);
+            } else {
+                $btn.text('⚠️ Failed');
+                $status.removeClass('loading').addClass('error').text(response.data.message);
+            }
+            setTimeout(function() {
+                $btn.prop('disabled', false).text('🧹 Clean All Cache Now');
+                $status.text('');
+            }, 2000);
+        });
+    });
+
 });

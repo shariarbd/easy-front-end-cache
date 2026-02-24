@@ -1,77 +1,55 @@
 === Easy Front End Cache ===
-Contributors: yourusername
-Donate link: https://example.com/
+Contributors: yourname
+Donate link: https://yourwebsite.com
 Tags: cache, performance, speed, optimization
 Requires at least: 5.0
 Tested up to: 6.5
-Stable tag: 1.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A lightweight file-based caching plugin for WordPress front-end pages. Includes admin controls for cache lifetime, reset parameters, manual reset, cache folder size display, and optional site-wide redirect.
+A lightweight, admin‑friendly WordPress plugin that provides front‑end page caching with instant AJAX clearing, colorful admin bar status, and flexible purge options.
 
 == Description ==
+Easy Front End Cache improves site performance by caching front‑end pages into static HTML files. It includes admin bar integration, AJAX‑based cache clearing, purge triggers, and secure cache directory handling.
 
-Easy Front End Cache speeds up your WordPress site by caching front-end pages into static HTML files.  
-It is simple, dependency-free, and admin-friendly.
-
-= Features =
-* Cache front-end pages into `/wp-content/efc-cache/`
-* Configurable cache lifetime (seconds)
-* Custom reset parameters (`?reset=1`, `?reset_all=1`, or your own)
-* Manual "Clear All Cache" button in admin
-* Cache folder size display
-* Redirect field for maintenance/migration
-* Inline documentation in admin panel
-* Excludes logged-in users and admin pages
+**Features:**
+* Front‑end caching for faster page loads
+* Manual cache clearing from admin bar and settings page (AJAX, no reload)
+* Colorful admin bar status showing cache size and file count
+* Automatic purge triggers (post update/delete, theme switch, scheduled cleanup)
+* Secure cache directory with `.htaccess` and `index.php`
+* Exclusions for admin, logged‑in users, search, previews, feeds, REST API, query strings, WooCommerce cart/checkout
+* Options for minify, debug mode, and admin controls
+* Localization ready (`easy-front-end-cache.pot` included)
 
 == Installation ==
-
-1. Upload the plugin folder to `/wp-content/plugins/`.
-2. Activate **Easy Front End Cache** from the WordPress admin.
-3. Go to **Settings → Easy Front End Cache** to configure options.
-
-== Usage ==
-
-* **Cache Time:** Set how long cached pages remain valid.
-* **Reset Single Param:** Add `?reset=1` (or your custom param) to a page URL to clear its cache.
-* **Reset All Param:** Add `?reset_all=1` (or your custom param) to any URL to clear all cache.
-* **Manual Reset:** Use the "Clear All Cache" button in admin.
-* **Redirect Entire Site:** Enter a URL to redirect all front-end requests (maintenance mode).
-
-== Frequently Asked Questions ==
-
-= Does this cache logged-in users? =
-No, logged-in users and admin pages are excluded.
-
-= Where are cache files stored? =
-In `/wp-content/efc-cache/`.
-
-= How do I know if a page is served from cache? =
-Check response headers for `X-Cache: HIT`.
+1. Upload the plugin files to the `/wp-content/plugins/easy-front-end-cache/` directory, or install via the WordPress Plugins screen.
+2. Activate the plugin through the 'Plugins' menu in WordPress.
+3. Configure settings under **Settings → Front End Cache**.
 
 == Screenshots ==
+1. Settings Page — cache stats, manual clear button, options
+2. Admin Bar Integration — colorful status with cache size, file count, and AJAX clear
 
-1. Settings page with cache time, reset parameters, and redirect field.
-2. Cache management section showing folder size and reset button.
-3. Documentation section explaining usage.
+== Frequently Asked Questions ==
+= Does this plugin cache admin pages? =
+No. Admin pages, logged‑in users, search results, previews, feeds, REST API, and WooCommerce cart/checkout are excluded.
+
+= How do I clear the cache? =
+You can clear cache instantly from the admin bar or the settings page using the AJAX‑based “Clean All Cache Now” button.
+
+= Is the cache directory secure? =
+Yes. The plugin auto‑creates `.htaccess` and `index.php` safety files in `wp-content/efc-cache/`.
 
 == Changelog ==
-
-= 1.1 =
-* Added cache folder size display
-* Added manual reset button
-* Added redirect field
-* Added inline documentation
-
-= 1.0 =
-* Initial release with caching and reset parameters
+= 1.2.0 =
+* Added AJAX cache clearing (admin bar + settings page)
+* Added cache status box with warnings
+* Added purge triggers (post update/delete, theme switch, scheduled cleanup)
+* Added minify + debug options
+* Secure cache directory with safety files
 
 == Upgrade Notice ==
-
-= 1.1 =
-Adds admin documentation, cache size display, reset button, and redirect option.
-
-== License ==
-
-This plugin is licensed under the GPLv2 or later.
+= 1.2.0 =
+This release adds AJAX cache clearing, purge triggers, and improved admin UX. Update recommended.
