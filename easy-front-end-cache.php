@@ -4,7 +4,7 @@
  * Plugin URI:  https://github.com/shariarbd/easy-front-end-cache
  * Description: A lightweight front-end caching plugin with admin controls, purge options, AJAX-based cache clearing, and colorful admin bar status.
  * Version:     1.2.0
- * Author:      Your Name
+ * Author:      Shariar
  * Author URI:  https://kivabe.com
  * License:     GPLv2 or later
  * Text Domain: easy-front-end-cache

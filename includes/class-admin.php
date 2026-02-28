@@ -13,6 +13,9 @@ class EFEC_Admin {
         add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets' ] );
     }
 
+    /**
+     * Add plugin settings page under Settings menu
+     */
     public static function add_menu() {
         add_options_page(
             __('Easy Front End Cache', 'easy-front-end-cache'),
@@ -23,8 +26,13 @@ class EFEC_Admin {
         );
     }
 
+    /**
+     * Register plugin settings and fields
+     */
     public static function register_settings() {
+        // ==============================
         // General cache options
+        // ==============================
         add_settings_section(
             'efec_general_section',
             __('General Cache Options', 'easy-front-end-cache'),
@@ -32,31 +40,48 @@ class EFEC_Admin {
             'easy-front-end-cache'
         );
 
+        // Enable/disable cache
         register_setting('easy-front-end-cache', 'efc_enable_cache');
         add_settings_field('efc_enable_cache', __('Enable Cache', 'easy-front-end-cache'),
             [ __CLASS__, 'render_checkbox' ], 'easy-front-end-cache', 'efec_general_section',
             ['option' => 'efc_enable_cache', 'description' => __('Turn caching on or off for the front end.', 'easy-front-end-cache')]
         );
 
+        // Minify HTML
         register_setting('easy-front-end-cache', 'efc_minify_html');
         add_settings_field('efc_minify_html', __('Minify HTML Output', 'easy-front-end-cache'),
             [ __CLASS__, 'render_checkbox' ], 'easy-front-end-cache', 'efec_general_section',
             ['option' => 'efc_minify_html', 'description' => __('Compress whitespace in cached HTML files.', 'easy-front-end-cache')]
         );
 
+        // Debug mode
         register_setting('easy-front-end-cache', 'efc_debug_mode');
         add_settings_field('efc_debug_mode', __('Enable Debug Mode', 'easy-front-end-cache'),
             [ __CLASS__, 'render_checkbox' ], 'easy-front-end-cache', 'efec_general_section',
             ['option' => 'efc_debug_mode', 'description' => __('Adds X-Easy-Cache headers (HIT/MISS) for debugging.', 'easy-front-end-cache')]
         );
 
-        // Cache lifetime and reset options
+        // Cache lifetime (global fallback)
         register_setting('easy-front-end-cache', 'efc_cache_time');
         add_settings_field('efc_cache_time', __('Cache Lifetime (seconds)', 'easy-front-end-cache'),
             [ __CLASS__, 'render_number' ], 'easy-front-end-cache', 'efec_general_section',
-            ['option' => 'efc_cache_time', 'default' => 600, 'description' => __('How long cached files remain valid before refresh.', 'easy-front-end-cache')]
+            ['option' => 'efc_cache_time', 'default' => 600, 'description' => __('Default cache lifetime for all content.', 'easy-front-end-cache')]
         );
 
+        // Separate lifetimes for posts and pages
+        register_setting('easy-front-end-cache', 'efc_cache_time_posts');
+        add_settings_field('efc_cache_time_posts', __('Cache Lifetime for Posts (seconds)', 'easy-front-end-cache'),
+            [ __CLASS__, 'render_number' ], 'easy-front-end-cache', 'efec_general_section',
+            ['option' => 'efc_cache_time_posts', 'default' => 600, 'description' => __('Separate cache lifetime for single posts.', 'easy-front-end-cache')]
+        );
+
+        register_setting('easy-front-end-cache', 'efc_cache_time_pages');
+        add_settings_field('efc_cache_time_pages', __('Cache Lifetime for Pages (seconds)', 'easy-front-end-cache'),
+            [ __CLASS__, 'render_number' ], 'easy-front-end-cache', 'efec_general_section',
+            ['option' => 'efc_cache_time_pages', 'default' => 1200, 'description' => __('Separate cache lifetime for pages.', 'easy-front-end-cache')]
+        );
+
+        // Reset params
         register_setting('easy-front-end-cache', 'efc_reset_param');
         add_settings_field('efc_reset_param', __('Reset Param (single page)', 'easy-front-end-cache'),
             [ __CLASS__, 'render_text' ], 'easy-front-end-cache', 'efec_general_section',
@@ -75,7 +100,9 @@ class EFEC_Admin {
             ['option' => 'efc_allow_public_reset', 'description' => __('Allow non-admin visitors to trigger cache reset via query string.', 'easy-front-end-cache')]
         );
 
+        // ==============================
         // Purge options
+        // ==============================
         add_settings_section(
             'efec_purge_section',
             __('Cache Purge Options', 'easy-front-end-cache'),
@@ -101,10 +128,19 @@ class EFEC_Admin {
             ['option' => 'efec_purge_on_theme_switch', 'description' => __('Automatically clear cache when switching themes.', 'easy-front-end-cache')]
         );
 
+        // Toggle cron cleanup
+        register_setting('easy-front-end-cache', 'efec_enable_cron_cleanup');
+        add_settings_field('efec_enable_cron_cleanup', __('Enable Scheduled Cleanup', 'easy-front-end-cache'),
+            [ __CLASS__, 'render_checkbox' ], 'easy-front-end-cache', 'efec_purge_section',
+            ['option' => 'efec_enable_cron_cleanup', 'description' => __('Turn WP-Cron cleanup on or off.', 'easy-front-end-cache')]
+        );
+
+        // Scheduled cleanup frequency (with hourly option)
         register_setting('easy-front-end-cache', 'efec_scheduled_cleanup');
         add_settings_field('efec_scheduled_cleanup', __('Scheduled Cleanup Frequency', 'easy-front-end-cache'),
             [ __CLASS__, 'render_select' ], 'easy-front-end-cache', 'efec_purge_section',
             ['option' => 'efec_scheduled_cleanup', 'choices' => [
+                'hourly'     => __('Hourly', 'easy-front-end-cache'),
                 'daily'      => __('Daily', 'easy-front-end-cache'),
                 'twicedaily' => __('Twice Daily', 'easy-front-end-cache'),
                 'weekly'     => __('Weekly', 'easy-front-end-cache')
@@ -112,9 +148,9 @@ class EFEC_Admin {
         );
     }
 
-    /**
-     * Render helpers with descriptions
-     */
+        // ==============================
+    // Render helpers
+    // ==============================
     public static function render_checkbox($args) {
         $option = $args['option'];
         $value = get_option($option);
@@ -149,7 +185,7 @@ class EFEC_Admin {
         <?php
     }
 
-        public static function render_select($args) {
+    public static function render_select($args) {
         $option = $args['option'];
         $choices = $args['choices'];
         $value = get_option($option, 'daily');
@@ -166,9 +202,9 @@ class EFEC_Admin {
         <?php
     }
 
-    /**
-     * Admin bar status nodes
-     */
+    // ==============================
+    // Admin bar integration
+    // ==============================
     public static function admin_bar_status($wp_admin_bar) {
         if ( ! current_user_can('manage_options') ) {
             return;
@@ -178,13 +214,14 @@ class EFEC_Admin {
         $size  = EFEC_Helpers::dir_size($dir);
         $count = EFEC_Helpers::dir_count($dir);
 
+        // Top-level node
         $wp_admin_bar->add_node([
             'id'    => 'efc-status',
             'title' => '<span style="color:#2ecc71;font-weight:bold;">⚡ Easy Cache</span>',
             'href'  => admin_url('options-general.php?page=easy-front-end-cache'),
         ]);
 
-        // Sub-node: Title
+        // Sub-nodes
         $wp_admin_bar->add_node([
             'id'     => 'efc-title',
             'parent' => 'efc-status',
@@ -214,9 +251,9 @@ class EFEC_Admin {
         ]);
     }
 
-    /**
-     * Handle AJAX cache clear
-     */
+    // ==============================
+    // AJAX handler for cache clearing
+    // ==============================
     public static function handle_ajax_clear() {
         if ( ! current_user_can('manage_options') ) {
             wp_send_json_error( [ 'message' => __('Permission denied.', 'easy-front-end-cache') ] );
@@ -227,9 +264,9 @@ class EFEC_Admin {
         wp_send_json_success( [ 'message' => __('✅ Cache cleared successfully.', 'easy-front-end-cache') ] );
     }
 
-    /**
-     * Enqueue admin JS for AJAX clearing
-     */
+    // ==============================
+    // Enqueue admin assets
+    // ==============================
     public static function enqueue_assets() {
         wp_enqueue_script(
             'efc-admin-js',
@@ -246,9 +283,9 @@ class EFEC_Admin {
         );
     }
 
-    /**
-     * Render settings page
-     */
+    // ==============================
+    // Render settings page
+    // ==============================
     public static function render_settings_page() {
         $dir   = WP_CONTENT_DIR . '/efc-cache/';
         $size  = EFEC_Helpers::dir_size($dir);
@@ -267,11 +304,11 @@ class EFEC_Admin {
             <h2><?php esc_html_e('Cache Status', 'easy-front-end-cache'); ?></h2>
             <p><?php esc_html_e('Directory:', 'easy-front-end-cache'); ?> 
                 <?php echo esc_html(WP_CONTENT_DIR . '/efc-cache/'); ?><br><br>
-                <span id="easy-front-end-cache_stattus">
+                <span id="easy-front-end-cache_status">
                     <strong style="color: rgb(0, 115, 170);">Cache Folder Size :</strong>  <?php echo size_format($size); ?> <br> 
                     <strong style="color: rgb(0, 115, 170);">Total Cached Files:</strong>  <?php echo intval($count); ?>
                 </span>
-                </p>
+            </p>
             <p><?php esc_html_e('Next Scheduled Cleanup:', 'easy-front-end-cache'); ?> <?php echo esc_html(EFEC_Helpers::next_cron_time('efec_scheduled_cleanup_event')); ?></p>
             <button class="button efc-clear-cache-btn"><?php esc_html_e('🧹 Clean All Cache Now', 'easy-front-end-cache'); ?></button>
             <span class="efc-clear-status"></span>
