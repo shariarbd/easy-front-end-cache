@@ -1,22 +1,102 @@
-/* Easy Front End Cache - Admin Styles */
+/* ==============================
+   Overlay + Spinner + Progress Bar
+   ============================== */
+.efc-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+.efc-overlay.show { opacity: 1; }
 
-.efc-clear-cache-btn {
-    margin-top: 5px;
+.efc-spinner {
+    border: 6px solid #f3f3f3;
+    border-top: 6px solid #2ecc71;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+@keyframes spin {
+    0%   { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-.efc-clear-status {
-    font-weight: bold;
-    margin-left: 10px;
+.efc-progress {
+    width: 60%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 4px;
+    margin-top: 15px;
+    height: 12px;
+    overflow: hidden;
+}
+.efc-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #2ecc71;
+    transition: width 0.3s ease;
 }
 
-.efc-clear-status.success {
-    color: #2ecc71; /* green */
+/* ==============================
+   Toast Notifications
+   ============================== */
+.efc-toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
 }
-
-.efc-clear-status.error {
-    color: #e74c3c; /* red */
+.efc-toast {
+    display: none;
+    background: #333;
+    color: #fff;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
+.efc-toast.success { background: #2ecc71; }
+.efc-toast.error   { background: #e74c3c; }
 
-.efc-clear-status.loading {
-    color: #f39c12; /* orange */
+/* ==============================
+   Confirmation Modal
+   ============================== */
+.efc-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.efc-modal {
+    background: #fff;
+    padding: 20px;
+    border-radius: 6px;
+    width: 400px;
+    max-width: 90%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    text-align: center;
+}
+.efc-modal h2 {
+    margin-top: 0;
+    color: #e74c3c;
+}
+.efc-modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
 }

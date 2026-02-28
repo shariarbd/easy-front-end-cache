@@ -1,3 +1,88 @@
+# Easy Front End Cache (EFEC)
+
+A lightweight, admin‑friendly WordPress plugin for front‑end caching.  
+Designed for **scalability, usability, and instant feedback**.
+
+---
+
+## ✨ Features
+
+- **Granular Purge Logic**  
+  Clears only the updated/deleted post and homepage cache, instead of wiping everything.
+
+- **Cron Job Control**  
+  - Enable/disable scheduled cleanup.  
+  - Hourly, daily, twice daily, or weekly options.  
+  - “Reschedule Now” button to instantly apply new settings.  
+  - “Run Cleanup Now” button to manually trigger cleanup immediately.
+
+- **Separate Cache Lifetimes**  
+  Different cache durations for posts, pages, and global fallback.
+
+- **Overlay Animation + Progress Bar**  
+  Full‑screen overlay with spinner and progress bar during cache clearing.
+
+- **Instant Stats Update**  
+  Cache folder size and file count update live via AJAX — no reload needed.
+
+- **Toast Notifications**  
+  Success/error messages appear as popups in the bottom‑right corner.
+
+- **Last Cleared Timestamp**  
+  Shows the exact local WP time when cache was last purged.
+
+- **Next Scheduled Cleanup**  
+  Displays upcoming cron run time in WordPress local timezone.
+
+- **Confirmation Modal**  
+  Prevents accidental cache purges by asking for confirmation before cleanup.
+
+---
+
+## 🛠 Installation
+
+1. Upload the plugin folder to `/wp-content/plugins/`.
+2. Activate via **Plugins → Installed Plugins**.
+3. Configure settings under **Settings → Front End Cache**.
+
+---
+
+## 📖 Usage
+
+- Use the **admin bar menu** or settings page buttons to clear cache.  
+- Configure lifetimes, purge options, and cron frequency in settings.  
+- Use **Reschedule Now** to instantly apply new cron settings.  
+- Use **Run Cleanup Now** to manually purge cache with overlay animation.  
+
+---
+
+## 📜 Changelog
+
+### 2.0.0 (2026‑02‑28)
+- Added granular purge logic (post + homepage only).
+- Added cron job enable/disable toggle.
+- Added hourly cron option.
+- Added separate lifetimes for posts and pages.
+- Added overlay animation with progress bar.
+- Added instant stats update via AJAX.
+- Added toast notifications for success/error.
+- Added last cleared timestamp (local WP time).
+- Fixed next scheduled cleanup display (local WP time).
+- Added “Reschedule Now” button.
+- Added “Run Cleanup Now” button.
+- Added confirmation modal before cleanup.
+
+---
+
+## 👨‍💻 Developer Notes
+
+- Code is fully modular (`class-cache.php`, `class-admin.php`, `class-helpers.php`, etc.).
+- Each file includes **inline comments** explaining logic and responsibilities.
+- Uses `EFEC_Helpers::safe_unlink()` for safe file deletion.
+- Uses `date_i18n()` for all time displays (respects WP timezone).
+
+
+
 # Easy Front End Cache
 
 **Version:** 1.2.0 

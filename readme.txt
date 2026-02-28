@@ -1,5 +1,64 @@
 === Easy Front End Cache ===
 Contributors: yourname
+Tags: cache, performance, optimization
+Requires at least: 5.0
+Tested up to: 6.5
+Stable tag: 2.0.0
+License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+
+A lightweight, admin‑friendly WordPress plugin for front‑end caching with instant feedback, overlay animations, and cron control.
+
+== Description ==
+
+Easy Front End Cache (EFEC) improves site performance by caching front‑end output.  
+It empowers admins with **live feedback, granular control, and modern UX**.
+
+== Features ==
+
+* Granular purge logic (post + homepage only).
+* Cron job control (enable/disable, hourly option).
+* Separate lifetimes for posts and pages.
+* Overlay animation with progress bar.
+* Instant stats update via AJAX.
+* Toast notifications for success/error.
+* Last cleared timestamp (local WP time).
+* Next scheduled cleanup display (local WP time).
+* Reschedule Now button.
+* Run Cleanup Now button.
+* Confirmation modal before cleanup.
+
+== Installation ==
+
+1. Upload the plugin folder to `/wp-content/plugins/`.
+2. Activate via Plugins → Installed Plugins.
+3. Configure settings under Settings → Front End Cache.
+
+== Changelog ==
+
+= 2.0.0 (2026‑02‑28) =
+* Added granular purge logic (post + homepage only).
+* Added cron job enable/disable toggle.
+* Added hourly cron option.
+* Added separate lifetimes for posts and pages.
+* Added overlay animation with progress bar.
+* Added instant stats update via AJAX.
+* Added toast notifications for success/error.
+* Added last cleared timestamp (local WP time).
+* Fixed next scheduled cleanup display (local WP time).
+* Added “Reschedule Now” button.
+* Added “Run Cleanup Now” button.
+* Added confirmation modal before cleanup.
+
+== Developer Notes ==
+* Modular file structure with inline comments.
+* Uses safe file deletion helpers.
+* Uses WordPress local time functions for all timestamps.
+
+
+
+=== Easy Front End Cache ===
+Contributors: yourname
 Donate link: https://yourwebsite.com
 Tags: cache, performance, speed, optimization
 Requires at least: 5.0
