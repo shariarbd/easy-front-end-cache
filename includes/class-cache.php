@@ -21,6 +21,14 @@ class EFEC_Cache {
         if ( is_preview() ) return;
         if ( is_search() ) return;
 
+        // Exclusion logic
+        if ( ! self::should_cache() ) {
+            if ( get_option('efc_debug_mode') ) {
+                header("X-Easy-Cache: BYPASS");
+            }
+            return;
+        }
+
         // ==============================
         // 2️⃣ Get settings
         // ==============================
@@ -104,6 +112,77 @@ class EFEC_Cache {
                 header( "X-Easy-Cache: MISS" );
             }
         }, 999 );
+    }
+
+    public static function should_cache() {
+        if ( ! get_option('efc_enable_cache') ) {
+            return false;
+        }
+
+        global $post, $wp;
+
+        // Resolve current URL to post ID
+        $post_id = 0;
+        if ( isset($wp) ) {
+            $request_url = home_url( $wp->request );
+            $post_id     = url_to_postid( $request_url );
+        }
+
+        // Excluded Pages
+        $excluded_pages = (array) get_option('efc_excluded_pages', []);
+        if ( $post_id && in_array($post_id, $excluded_pages, true) ) {
+            return false;
+        }
+
+        // Excluded Posts
+        $excluded_posts = (array) get_option('efc_excluded_posts', []);
+        if ( $post && in_array($post->ID, $excluded_posts, true) ) {
+            return false;
+        }
+
+        // Excluded Categories (single post view)
+        $excluded_cats = (array) get_option('efc_excluded_categories', []);
+        if ( $post && ! empty($excluded_cats) ) {
+            $post_cats = wp_get_post_categories($post->ID);
+            if ( array_intersect($excluded_cats, $post_cats) ) {
+                return false;
+            }
+        }
+
+        // Category archive exclusion
+        if ( is_category() ) {
+            $queried_cat = get_queried_object_id();
+            if ( in_array($queried_cat, $excluded_cats, true) ) {
+                return false;
+            }
+        }
+
+        // Excluded Custom Post Types (single post view)
+        $excluded_cpts = (array) get_option('efc_excluded_cpts', []);
+        if ( $post && in_array($post->post_type, $excluded_cpts, true) ) {
+            return false;
+        }
+
+        // CPT archive exclusion
+        if ( is_post_type_archive() ) {
+            $queried_cpt = get_query_var('post_type');
+            if ( in_array($queried_cpt, $excluded_cpts, true) ) {
+                return false;
+            }
+        }
+
+        // Excluded Slugs
+        $excluded_slugs = preg_split('/\r\n|\r|\n/', get_option('efc_excluded_slugs', ''));
+        $excluded_slugs = array_map('trim', $excluded_slugs);
+        $excluded_slugs = array_filter($excluded_slugs);
+
+        if ( $post && ! empty($excluded_slugs) ) {
+            if ( in_array($post->post_name, $excluded_slugs, true) ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

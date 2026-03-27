@@ -122,3 +122,19 @@ select.regular-select {
     padding: 4px 8px;
     max-width: 100%;
 }
+
+/* Multi-select dropdown styling */
+.efc-page-select {
+    min-width: 450px;
+    max-width: 100%;
+    height: 120px; /* fixed height for consistency */
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .efc-page-select {
+        width: 100%;
+    }
+}
