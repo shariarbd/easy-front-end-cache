@@ -1,0 +1,140 @@
+/* Easy Front End Cache - Admin Styles */
+.form-table, .form-table td, .form-table td p, .form-table th{
+    font-size: 12px;
+}
+.efc-clear-cache-btn {
+    margin-top: 5px;
+}
+.efc-clear-status {
+    font-weight: bold;
+    margin-left: 10px;
+}
+.efc-clear-status.success {
+    color: #2ecc71; /* green */
+}
+.efc-clear-status.error {
+    color: #e74c3c; /* red */
+}
+.efc-clear-status.loading {
+    color: #f39c12; /* orange */
+}
+
+/* Optional spinner animation */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid #ccc;
+    border-top: 2px solid #0073aa;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: 5px;
+}
+
+/* Grid layout for option cards */
+.efc-grid {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* allow wrapping */
+}
+.efc-card {
+    flex: 1;
+    min-width: 300px;
+}
+.efc-card-full {
+    margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+    .efc-grid {
+        flex-direction: column;
+    }
+    .efc-card {
+        width: 100%;
+    }
+}
+
+/* Headings */
+.efc-settings-wrap .hndle {
+    font-size: 1.25em;
+        padding: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #ededed;
+    margin: 0; 
+}
+
+/* Labels */
+.efc-label {
+    color: #0073aa;
+    font-weight: bold;
+}
+
+/* Modern toggle switch */
+.efc-toggle {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+}
+.efc-toggle + p {
+    display: inline-block;
+    padding-left: 10px;
+}
+.efc-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.efc-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0;
+    right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 24px;
+}
+.efc-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px; width: 18px;
+    left: 3px; bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+.efc-toggle input:checked + .efc-slider {
+    background-color: #0073aa;
+}
+.efc-toggle input:checked + .efc-slider:before {
+    transform: translateX(22px);
+}
+
+/* Select styling */
+select.regular-select {
+    min-width: 200px;
+    padding: 4px 8px;
+    max-width: 100%;
+}
+
+/* Multi-select dropdown styling */
+.efc-page-select {
+    min-width: 450px;
+    max-width: 100%;
+    height: 120px; /* fixed height for consistency */
+    padding: 6px;
+    box-sizing: border-box;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .efc-page-select {
+        width: 100%;
+    }
+}

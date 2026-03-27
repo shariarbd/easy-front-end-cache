@@ -1,0 +1,15 @@
+easy-front-end-cache/
+├── assets/
+│   ├── css/
+│   │   └── admin.css
+│   └── js/
+│       └── admin.js
+├── includes/
+│   ├── class-admin.php
+│   ├── class-cache.php
+│   ├── class-exclusions.php
+│   ├── class-helpers.php
+│   └── class-purge.php
+├── languages/
+│   └── easy-front-end-cache.pot
+└── easy-front-end-cache.php
