@@ -3,7 +3,7 @@
  * Plugin Name: Easy Front End Cache
  * Plugin URI:  https://github.com/shariarbd/easy-front-end-cache
  * Description: A lightweight front-end caching plugin with admin controls, purge options, AJAX-based cache clearing, and colorful admin bar status.
- * Version:     1.7
+ * Version:     1.8
  * Author:      Shariar
  * Author URI:  https://kivabe.com
  * License:     GPLv2 or later
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Define constants
-define( 'EFEC_VERSION', '1.7.0' ); // keep version consistent
+define( 'EFEC_VERSION', '1.8.0' ); // keep version consistent
 define( 'EFEC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'EFEC_URL', plugin_dir_url( __FILE__ ) );
 
@@ -32,15 +32,19 @@ require_once EFEC_PATH . 'includes/class-cache.php';
 require_once EFEC_PATH . 'includes/class-exclusions.php';
 require_once EFEC_PATH . 'includes/class-purge.php';
 
-// NEW: split admin into two files
-require_once EFEC_PATH . 'includes/class-admin-settings.php';
-require_once EFEC_PATH . 'includes/class-admin-bar.php';
+// NEW: modular admin loader
+if ( is_admin() ) {
+    require_once EFEC_PATH . 'includes/admin/admin-loader.php';
+    require_once EFEC_PATH . 'includes/class-admin-bar.php';
+}
 
 // Initialize plugin classes
 add_action( 'init', function() {
     EFEC_Cache::init();
     EFEC_Exclusions::init();
     EFEC_Purge::init();
-    EFEC_Admin_Settings::init();
-    EFEC_Admin_Bar::init();
+
+    if ( is_admin() ) {
+        EFEC_Admin_Bar::init();
+    }
 });

@@ -1,19 +1,21 @@
-jQuery(document).ready(function($) {
+(function($){
 
-    // Helper: update stats everywhere
+    // =========================
+    // Helpers
+    // =========================
+
     function updateStats(data) {
         // Admin bar nodes
         $('#wp-admin-bar-efc-size .ab-item').text('Size: ' + data.size);
         $('#wp-admin-bar-efc-files .ab-item').text('Files: ' + data.count);
 
         // Settings page span
-        $('#easy-front-end-cache_stattus').html(
+        $('#easy_front_end_cache_status').html(
             '<strong style="color: rgb(0, 115, 170);">Cache Folder Size :</strong> ' + data.size + '<br>' +
             '<strong style="color: rgb(0, 115, 170);">Total Cached Files:</strong> ' + data.count
         );
     }
 
-    // Helper: show spinner while waiting
     function showSpinner() {
         $('#wp-admin-bar-efc-size .ab-item').text('Size: ⏳ …');
         $('#wp-admin-bar-efc-files .ab-item').text('Files: ⏳ …');
@@ -23,7 +25,9 @@ jQuery(document).ready(function($) {
         );
     }
 
+    // =========================
     // Admin bar clear
+    // =========================
     $(document).on('click', '.efc-clear-cache-link', function(e) {
         e.preventDefault();
         var $link = $(this);
@@ -47,7 +51,9 @@ jQuery(document).ready(function($) {
             });
     });
 
+    // =========================
     // Settings page clear
+    // =========================
     $(document).on('click', '.efc-clear-cache-btn', function(e) {
         e.preventDefault();
         var $btn = $(this);
@@ -79,43 +85,59 @@ jQuery(document).ready(function($) {
             });
     });
 
+    // =========================
+    // Manual refresh stats button
+    // =========================
+    $(document).on('click', '.efc-refresh-stats-btn', function(e) {
+        e.preventDefault();
+        var $btn = $(this);
+        var $status = $('.efc-refresh-status');
+        $btn.prop('disabled', true).text('⏳ Refreshing...');
+        $status.removeClass('success error').addClass('loading').text('Fetching latest stats...');
+        showSpinner();
+
+        $.post(ajaxurl, { action: 'efc_get_cache_stats' })
+            .done(function(response) {
+                if (response.success) {
+                    updateStats(response.data);
+                    $status.removeClass('loading').addClass('success').text('✅ Stats updated');
+                } else {
+                    $status.removeClass('loading').addClass('error').text('⚠️ Failed to fetch stats');
+                }
+            })
+            .fail(function() {
+                $status.removeClass('loading').addClass('error').text('❌ AJAX request failed');
+            })
+            .always(function() {
+                setTimeout(function() {
+                    $btn.prop('disabled', false).text('🔄 Refresh Stats');
+                    $status.text('');
+                }, 2000);
+            });
+    });
+
+    // =========================
     // Auto-refresh stats every 30s
+    // =========================
     setInterval(function() {
         $.post(ajaxurl, { action: 'efc_get_cache_stats' }, function(response) {
             if (response.success) {
                 updateStats(response.data);
             }
         });
-    }, 30000); 
+    }, 60000);
 
-});
+    // =========================
+    // Reset buttons for exclusions
+    // =========================
+    $(document).on('click', '.efc-reset-select', function(){
+        var target = $(this).data('target');
+        $('select[name="'+target+'[]"]').val([]); // clear all selections
+    });
 
+    $(document).on('click', '.efc-reset-textarea', function(){
+        var target = $(this).data('target');
+        $('textarea[name="'+target+'"]').val(''); // clear textarea
+    });
 
-// Manual refresh stats button
-$(document).on('click', '.efc-refresh-stats-btn', function(e) {
-    e.preventDefault();
-    var $btn = $(this);
-    var $status = $('.efc-refresh-status');
-    $btn.prop('disabled', true).text('⏳ Refreshing...');
-    $status.removeClass('success error').addClass('loading').text('Fetching latest stats...');
-    showSpinner();
-
-    $.post(ajaxurl, { action: 'efc_get_cache_stats' })
-        .done(function(response) {
-            if (response.success) {
-                updateStats(response.data);
-                $status.removeClass('loading').addClass('success').text('✅ Stats updated');
-            } else {
-                $status.removeClass('loading').addClass('error').text('⚠️ Failed to fetch stats');
-            }
-        })
-        .fail(function() {
-            $status.removeClass('loading').addClass('error').text('❌ AJAX request failed');
-        })
-        .always(function() {
-            setTimeout(function() {
-                $btn.prop('disabled', false).text('🔄 Refresh Stats');
-                $status.text('');
-            }, 2000);
-        });
-});
+})(jQuery);

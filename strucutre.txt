@@ -10,6 +10,13 @@ easy-front-end-cache/
 │   ├── class-exclusions.php
 │   ├── class-helpers.php
 │   └── class-purge.php
+	/includes/admin/
+    class-admin-settings.php        // Main loader, menu + page wrapper
+    class-admin-general.php         // General cache options card
+    class-admin-purge.php           // Purge options card
+    class-admin-exclusions.php      // Exclusion options card
+    class-admin-status.php          // Cache status card
+    trait-admin-renderers.php       // Shared render helpers (checkbox, text, dropdown, etc.)
 ├── languages/
 │   └── easy-front-end-cache.pot
 └── easy-front-end-cache.php
