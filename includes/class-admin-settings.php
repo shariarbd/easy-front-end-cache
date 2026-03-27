@@ -3,15 +3,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-class EFEC_Admin {
+class EFEC_Admin_Settings {
 
     public static function init() {
         add_action( 'admin_menu', [ __CLASS__, 'add_menu' ] );
         add_action( 'admin_init', [ __CLASS__, 'register_settings' ] );
-        add_action( 'admin_bar_menu', [ __CLASS__, 'admin_bar_status' ], 100 );
-        add_action( 'wp_ajax_efc_clear_cache_ajax', [ __CLASS__, 'handle_ajax_clear' ] );
-        add_action( 'admin_enqueue_scripts', [ __CLASS__, 'enqueue_assets' ] );
-        add_action( 'wp_ajax_efc_get_cache_stats', [ __CLASS__, 'handle_ajax_stats' ] );
     }
 
     public static function add_menu() {
@@ -113,12 +109,9 @@ class EFEC_Admin {
         );
     }
 
-    /**
-     * Render helpers with descriptions
-     */
     public static function render_checkbox($args) {
-        $option = $args['option'];
-        $value = get_option($option);
+        $option      = $args['option'];
+        $value       = get_option($option);
         $description = isset($args['description']) ? $args['description'] : '';
         ?>
         <label>
@@ -129,9 +122,9 @@ class EFEC_Admin {
     }
 
     public static function render_number($args) {
-        $option = $args['option'];
-        $default = isset($args['default']) ? $args['default'] : '';
-        $value = get_option($option, $default);
+        $option      = $args['option'];
+        $default     = isset($args['default']) ? $args['default'] : '';
+        $value       = get_option($option, $default);
         $description = isset($args['description']) ? $args['description'] : '';
         ?>
         <input type="number" name="<?php echo esc_attr($option); ?>" value="<?php echo esc_attr($value); ?>" />
@@ -140,9 +133,9 @@ class EFEC_Admin {
     }
 
     public static function render_text($args) {
-        $option = $args['option'];
-        $default = isset($args['default']) ? $args['default'] : '';
-        $value = get_option($option, $default);
+        $option      = $args['option'];
+        $default     = isset($args['default']) ? $args['default'] : '';
+        $value       = get_option($option, $default);
         $description = isset($args['description']) ? $args['description'] : '';
         ?>
         <input type="text" name="<?php echo esc_attr($option); ?>" value="<?php echo esc_attr($value); ?>" />
@@ -150,10 +143,10 @@ class EFEC_Admin {
         <?php
     }
 
-        public static function render_select($args) {
-        $option = $args['option'];
-        $choices = $args['choices'];
-        $value = get_option($option, 'daily');
+    public static function render_select($args) {
+        $option      = $args['option'];
+        $choices     = $args['choices'];
+        $value       = get_option($option, 'daily');
         $description = isset($args['description']) ? $args['description'] : '';
         ?>
         <select name="<?php echo esc_attr($option); ?>">
@@ -167,126 +160,7 @@ class EFEC_Admin {
         <?php
     }
 
-    /**
-     * Admin bar status nodes
-     */
-    public static function admin_bar_status($wp_admin_bar) {
-        if ( ! current_user_can('manage_options') ) {
-            return;
-        }
-
-        $dir   = WP_CONTENT_DIR . '/efc-cache/';
-        $size  = EFEC_Helpers::dir_size($dir);
-        $count = EFEC_Helpers::dir_count($dir);
-
-        $wp_admin_bar->add_node([
-            'id'    => 'efc-status',
-            'title' => '<span style="color:#2ecc71;font-weight:bold;">⚡ Easy Cache</span>',
-            'href'  => admin_url('options-general.php?page=easy-front-end-cache'),
-        ]);
-
-        // Sub-node: Title
-        $wp_admin_bar->add_node([
-            'id'     => 'efc-title',
-            'parent' => 'efc-status',
-            'title'  => __('<span style="font-size:.85em;">Easy Front End Cache</span>', 'easy-front-end-cache'), 
-        ]);
-
-        $wp_admin_bar->add_node([
-            'id'     => 'efc-size',
-            'parent' => 'efc-status',
-            'title'  => __('Size: ', 'easy-front-end-cache') . size_format($size),
-        ]);
-
-        $wp_admin_bar->add_node([
-            'id'     => 'efc-files',
-            'parent' => 'efc-status',
-            'title'  => __('Files: ', 'easy-front-end-cache') . intval($count),
-        ]);
-
-        $wp_admin_bar->add_node([
-            'id'     => 'efc-clear',
-            'parent' => 'efc-status',
-            'title'  => __('🧹 Clean All', 'easy-front-end-cache'),
-            'href'   => '#',
-            'meta'   => [
-                'class' => 'efc-clear-cache-link'
-            ]
-        ]);
-    }
-
-    /**
-     * Handle AJAX cache clear
-     */
-    /**
- * Handle AJAX cache clear
- */
-    public static function handle_ajax_clear() {
-        if ( ! current_user_can('manage_options') ) {
-            wp_send_json_error( [ 'message' => __('Permission denied.', 'easy-front-end-cache') ] );
-        }
-
-        // Clear all cache files
-        EFEC_Cache::purge_all();
-
-        // Recalculate stats AFTER purge
-        $dir   = WP_CONTENT_DIR . '/efc-cache/';
-        $size  = EFEC_Helpers::dir_size($dir);
-        $count = EFEC_Helpers::dir_count($dir);
-
-        wp_send_json_success( [
-            'message' => __('✅ Cache cleared successfully.', 'easy-front-end-cache'),
-            'size'    => size_format($size),
-            'count'   => intval($count),
-        ] );
-    }
-
-
-
-    /**
-     * Handle AJAX stats fetch
-    */
-    public static function handle_ajax_stats() {
-        if ( ! current_user_can('manage_options') ) {
-            wp_send_json_error( [ 'message' => __('Permission denied.', 'easy-front-end-cache') ] );
-        }
-
-        $dir   = WP_CONTENT_DIR . '/efc-cache/';
-        $size  = EFEC_Helpers::dir_size($dir);
-        $count = EFEC_Helpers::dir_count($dir);
-
-        wp_send_json_success( [
-            'size'  => size_format($size),
-            'count' => intval($count),
-        ] );
-    }
-
-
-
-
-    /**
-     * Enqueue admin JS for AJAX clearing
-     */
-    public static function enqueue_assets() {
-        wp_enqueue_script(
-            'efc-admin-js',
-            EFEC_URL . 'assets/js/admin.js',
-            [ 'jquery' ],
-            EFEC_VERSION,
-            true
-        );
-        wp_enqueue_style(
-            'efc-admin-css',
-            EFEC_URL . 'assets/css/admin.css',
-            [],
-            EFEC_VERSION
-        );
-    }
-
-    /**
-     * Render settings page
-     */
-    public static function render_settings_page() {
+        public static function render_settings_page() {
         $dir   = WP_CONTENT_DIR . '/efc-cache/';
         $size  = EFEC_Helpers::dir_size($dir);
         $count = EFEC_Helpers::dir_count($dir);
@@ -302,18 +176,23 @@ class EFEC_Admin {
             </form>
 
             <h2><?php esc_html_e('Cache Status', 'easy-front-end-cache'); ?></h2>
-            <p><?php esc_html_e('Directory:', 'easy-front-end-cache'); ?> 
+            <p><?php esc_html_e('Directory:', 'easy-front-end-cache'); ?>
                 <?php echo esc_html(WP_CONTENT_DIR . '/efc-cache/'); ?><br><br>
                 <span id="easy-front-end-cache_stattus">
-                    <strong style="color: rgb(0, 115, 170);">Cache Folder Size :</strong>  <?php echo size_format($size); ?> <br> 
-                    <strong style="color: rgb(0, 115, 170);">Total Cached Files:</strong>  <?php echo intval($count); ?>
+                    <strong class="efc-label">Cache Folder Size :</strong> <?php echo size_format($size); ?><br>
+                    <strong class="efc-label">Total Cached Files:</strong> <?php echo intval($count); ?>
                 </span>
-                </p>
-            <p><?php esc_html_e('Next Scheduled Cleanup:', 'easy-front-end-cache'); ?> <?php echo esc_html(EFEC_Helpers::next_cron_time('efec_scheduled_cleanup_event')); ?></p>
-            <button class="button efc-clear-cache-btn"><?php esc_html_e('🧹 Clean All Cache Now', 'easy-front-end-cache'); ?></button> 
-            <button class="button efc-refresh-stats-btn"><?php esc_html_e('🔄 Refresh Stats', 'easy-front-end-cache'); ?></button>
-<span class="efc-refresh-status"></span>
- 
+            </p>
+            <p><?php esc_html_e('Next Scheduled Cleanup:', 'easy-front-end-cache'); ?>
+                <?php echo esc_html(EFEC_Helpers::next_cron_time('efec_scheduled_cleanup_event')); ?>
+            </p>
+            <button class="button efc-clear-cache-btn">
+                <?php esc_html_e('🧹 Clean All Cache Now', 'easy-front-end-cache'); ?>
+            </button>
+            <button class="button efc-refresh-stats-btn">
+                <?php esc_html_e('🔄 Refresh Stats', 'easy-front-end-cache'); ?>
+            </button>
+            <span class="efc-refresh-status"></span>
             <span class="efc-clear-status"></span>
         </div>
         <?php

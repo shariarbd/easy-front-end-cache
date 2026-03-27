@@ -1,42 +1,46 @@
 <?php
 /**
  * Plugin Name: Easy Front End Cache
- * Plugin URI:  https://github.com/yourname/easy-front-end-cache
- * Description: A lightweight, admin-friendly front-end caching plugin with instant feedback, overlay animations, cron control, and granular purge logic.
- * Version:     2.0.0
+ * Plugin URI:  https://github.com/shariarbd/easy-front-end-cache
+ * Description: A lightweight front-end caching plugin with admin controls, purge options, AJAX-based cache clearing, and colorful admin bar status.
+ * Version:     1.6
  * Author:      Shariar
- * Author URI:  https://github.com/yourname
+ * Author URI:  https://kivabe.com
  * License:     GPLv2 or later
  * Text Domain: easy-front-end-cache
+ * Domain Path: /languages
  */
 
-// Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
-    exit;
+    exit; // Exit if accessed directly
 }
 
-// ==============================
 // Define constants
-// ==============================
-define( 'EFEC_VERSION', '2.0.0' );
+define( 'EFEC_VERSION', '1.6.0' ); // keep version consistent
 define( 'EFEC_PATH', plugin_dir_path( __FILE__ ) );
 define( 'EFEC_URL', plugin_dir_url( __FILE__ ) );
 
-// ==============================
-// Autoload includes
-// ==============================
+// Load text domain for translations
+function efec_load_textdomain() {
+    load_plugin_textdomain( 'easy-front-end-cache', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
+}
+add_action( 'plugins_loaded', 'efec_load_textdomain' );
+
+// Include required files
 require_once EFEC_PATH . 'includes/class-helpers.php';
 require_once EFEC_PATH . 'includes/class-cache.php';
-require_once EFEC_PATH . 'includes/class-admin.php';
 require_once EFEC_PATH . 'includes/class-exclusions.php';
 require_once EFEC_PATH . 'includes/class-purge.php';
 
-// ==============================
-// Initialize plugin
-// ==============================
-add_action( 'plugins_loaded', function() {
-    // Initialize core classes
+// NEW: split admin into two files
+require_once EFEC_PATH . 'includes/class-admin-settings.php';
+require_once EFEC_PATH . 'includes/class-admin-bar.php';
+
+// Initialize plugin classes
+add_action( 'init', function() {
     EFEC_Cache::init();
-    EFEC_Admin::init();
+    EFEC_Exclusions::init();
     EFEC_Purge::init();
+    EFEC_Admin_Settings::init();
+    EFEC_Admin_Bar::init();
 });

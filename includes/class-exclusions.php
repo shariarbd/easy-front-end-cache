@@ -3,55 +3,59 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * Exclusions logic for Easy Front End Cache
- * -----------------------------------------
- * This class determines when caching should be skipped.
- * Examples:
- * - Admin pages
- * - Feeds, previews, search results
- * - Logged-in users (to avoid caching personalized content)
- * - POST requests or non-GET requests
- */
 class EFEC_Exclusions {
 
+    public static function init() {
+        // Nothing to hook directly — used by EFEC_Cache::maybe_serve_cache() and ::maybe_store_cache()
+    }
+
     /**
-     * Check if current request should be excluded from caching.
-     *
-     * @return bool True if caching should be skipped
+     * Determine if current request should be excluded from caching
      */
     public static function should_exclude() {
-        // Skip admin area
+        // Admin area
         if ( is_admin() ) {
             return true;
         }
 
-        // Skip feeds (RSS, Atom)
-        if ( is_feed() ) {
-            return true;
-        }
-
-        // Skip search results
-        if ( is_search() ) {
-            return true;
-        }
-
-        // Skip previews
-        if ( is_preview() ) {
-            return true;
-        }
-
-        // Skip logged-in users (to avoid caching personalized content)
+        // Logged-in users
         if ( is_user_logged_in() ) {
             return true;
         }
 
-        // Skip POST requests or non-GET requests
-        if ( $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
+        // Search results
+        if ( is_search() ) {
             return true;
         }
 
-        // Allow caching otherwise
+        // Preview mode
+        if ( is_preview() ) {
+            return true;
+        }
+
+        // Feeds
+        if ( is_feed() ) {
+            return true;
+        }
+
+        // REST API requests
+        if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+            return true;
+        }
+
+        // Query strings (avoid caching dynamic URLs)
+        if ( ! empty( $_GET ) ) {
+            return true;
+        }
+
+        // WooCommerce cart/checkout pages
+        if ( function_exists( 'is_cart' ) && is_cart() ) {
+            return true;
+        }
+        if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+            return true;
+        }
+
         return false;
     }
 }
