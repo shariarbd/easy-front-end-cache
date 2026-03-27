@@ -166,10 +166,7 @@ class EFEC_Admin_Settings {
                     <p>
                         <button class="button button-primary efc-clear-cache-btn">
                             <?php esc_html_e('🧹 Clean All Cache Now', 'easy-front-end-cache'); ?>
-                        </button>
-                        <button class="button efc-refresh-stats-btn">
-                            <?php esc_html_e('🔄 Refresh Stats', 'easy-front-end-cache'); ?>
-                        </button>
+                        </button> 
                         <span class="efc-refresh-status"></span>
                         <span class="efc-clear-status"></span>
                     </p>
